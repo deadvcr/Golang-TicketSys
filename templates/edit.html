@@ -9,6 +9,11 @@
 <body>
     <h1>Editing {{.Title}}</h1>
     <form action="/save/{{.Title}}" method="post">
+        <h4>Students assigned:</h4>
+        <div><input type="text" name="student" value='{{printf "%s" .Student}}'></div>
+        <h4>Client name:</h4>
+        <div><input type="text" name="client" value='{{printf "%s" .Client}}'></div>
+        <h4>Description:</h4>
         <div><textarea name="body" cols="100" rows="30">{{printf "%s" .Body}}</textarea></div>
         <div><input type="submit" value="Save"></div>
     </form>

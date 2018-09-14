@@ -14,10 +14,13 @@ import (
 
 //Page : every ticket created will follow this structure.
 type Page struct {
-	Title string
-	Body  string
+	Title   string
+	Body    string
+	Student string
+	Client  string
 }
 
+//Data : used for the viewIndex function.
 type Data struct {
 	Items []string
 }
@@ -28,7 +31,7 @@ func (p *Page) save() error {
 	filename := p.Title + ".json"
 	var page Page
 	json.Unmarshal([]byte(filename), &page)
-	m := Page{p.Title, p.Body}
+	m := Page{p.Title, p.Body, p.Student, p.Client}
 	b, err := json.Marshal(m)
 	if err != nil {
 		fmt.Println(err)
@@ -45,7 +48,7 @@ func loadPage(title string) (*Page, error) {
 	}
 	var page Page
 	json.Unmarshal([]byte(body), &page)
-	return &Page{Title: title, Body: page.Body}, nil
+	return &Page{Title: title, Body: page.Body, Student: page.Student, Client: page.Client}, nil
 }
 
 func main() {
@@ -96,7 +99,9 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	title = r.URL.Path[len("/save/"):]
 	body := r.FormValue("body")
-	p := &Page{Title: title, Body: body}
+	student := r.FormValue("student")
+	client := r.FormValue("client")
+	p := &Page{Title: title, Body: body, Student: student, Client: client}
 	p.save()
 	http.Redirect(w, r, "/view/"+title, http.StatusFound)
 }
