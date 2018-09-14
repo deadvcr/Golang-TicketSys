@@ -22,7 +22,7 @@ type Data struct {
 	Items []string
 }
 
-var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
+var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9-_]+)$")
 
 func (p *Page) save() error {
 	filename := p.Title + ".json"
@@ -73,6 +73,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		t, _ := template.ParseFiles("templates/view.html")
+		p.Body = template.HTMLEscapeString(p.Body)
 		t.Execute(w, p)
 	}
 }
