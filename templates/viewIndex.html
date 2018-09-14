@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>yeag</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+<body>
+    <h1>Current Tickets</h1>
+    {{range .Items}}<div><a href="/view/{{ . }}">{{ . }}</a></div>{{else}}<div><strong>no files</strong></div>{{end}}
+</body>
+</html>

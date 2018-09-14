@@ -9,12 +9,17 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strings"
 )
 
 //Page : every ticket created will follow this structure.
 type Page struct {
 	Title string
 	Body  string
+}
+
+type Data struct {
+	Items []string
 }
 
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
@@ -59,7 +64,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/view/" {
-		fmt.Fprint(w, "<h1>You didn't specify a page!</h1>")
+		viewIndex(w, r)
 	} else {
 		title := r.URL.Path[len("/view/"):]
 		p, err := loadPage(title)
@@ -102,4 +107,19 @@ func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 		return "", errors.New("Invalid Page Title")
 	}
 	return m[2], nil
+}
+
+func viewIndex(w http.ResponseWriter, r *http.Request) {
+	var data []string
+	files, err := ioutil.ReadDir("./files/")
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, f := range files {
+		result := strings.TrimSuffix(f.Name(), ".json")
+		data = append(data, result)
+	}
+	t, _ := template.ParseFiles("templates/viewIndex.html")
+	p := &Data{Items: data}
+	t.Execute(w, p)
 }
